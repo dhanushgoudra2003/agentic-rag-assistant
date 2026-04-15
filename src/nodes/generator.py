@@ -2,21 +2,26 @@ from langchain_groq import ChatGroq
 from langchain_community.embeddings import HuggingFaceEmbeddings 
 import re
 import os
+import streamlit as st
 from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()
 
+# ✅ FIX: support both local + cloud
+groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets["GROQ_API_KEY"]
+
 # 🔥 Groq LLM (FAST)
 llm = ChatGroq(
     model="llama-3.1-8b-instant",
-    groq_api_key=os.getenv("GROQ_API_KEY")
+    groq_api_key=groq_api_key
 )
 
 # 🔥 Embeddings for inline citation
 embedder = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
+
 
 # =========================
 # 🧠 TONE SYSTEM
