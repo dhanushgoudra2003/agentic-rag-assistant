@@ -6,10 +6,12 @@ from src.nodes.critic import critic_answer
 from src.nodes.refiner import refine_answer
 
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 
 # Setup retriever
-embeddings = OllamaEmbeddings(model="nomic-embed-text")
+embeddings = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 db = Chroma(
     persist_directory="db",
