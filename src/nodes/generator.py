@@ -1,5 +1,5 @@
 from langchain_groq import ChatGroq
-from langchain_ollama import OllamaEmbeddings
+from langchain.embeddings import HuggingFaceEmbeddings
 import re
 import os
 from dotenv import load_dotenv
@@ -14,8 +14,9 @@ llm = ChatGroq(
 )
 
 # 🔥 Embeddings for inline citation
-embedder = OllamaEmbeddings(model="nomic-embed-text")
-
+embedder = HuggingFaceEmbeddings(
+    model_name="sentence-transformers/all-MiniLM-L6-v2"
+)
 
 # =========================
 # 🧠 TONE SYSTEM
