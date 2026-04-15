@@ -8,3 +8,4 @@ torch
 torchvision
 python-dotenv
 chromadb
+protobuf==3.20.3
