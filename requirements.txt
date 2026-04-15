@@ -2,8 +2,9 @@ streamlit
 langchain
 langchain-groq
 langchain-community
-langgraph
 sentence-transformers
-python-dotenv
+transformers
 torch
 torchvision
+python-dotenv
+chromadb
