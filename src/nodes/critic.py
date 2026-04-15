@@ -1,8 +1,17 @@
-from langchain_ollama import ChatOllama
+from langchain_groq import ChatGroq
+import os
+import streamlit as st
 import json
 
-# Smart model for evaluation
-llm = ChatOllama(model="qwen2.5:7b")
+# Load API key (works locally + Streamlit Cloud)
+groq_api_key = os.getenv("GROQ_API_KEY") or st.secrets["GROQ_API_KEY"]
+
+# Smart model for evaluation (using Groq instead of Ollama)
+llm = ChatGroq(
+    model="llama-3.1-8b-instant",
+    groq_api_key=groq_api_key
+)
+
 
 def critic_answer(query, answer):
     print("🧠 Evaluating answer...")
