@@ -17,8 +17,7 @@ embeddings = HuggingFaceEmbeddings(
 # ✅ FIX: Explicit collection name (IMPORTANT)
 db = Chroma(
     persist_directory="db",
-    embedding_function=embeddings,
-    collection_name="langchain"  # 🔥 ensures correct loading
+    embedding_function=embeddings
 )
 
 # ✅ IMPROVED retrieval
