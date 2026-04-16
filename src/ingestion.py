@@ -1,7 +1,7 @@
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.vectorstores import Chroma
-from langchain_community.embeddings import OllamaEmbeddings
+from langchain_community.embeddings import HuggingFaceEmbeddings
 import os
 
 def ingest_docs():
@@ -29,15 +29,16 @@ def ingest_docs():
 
     print(f"Created {len(chunks)} chunks")
 
-    embeddings = OllamaEmbeddings(model="nomic-embed-text")
+    # ✅ FIXED: Use HuggingFace instead of Ollama
+    embeddings = HuggingFaceEmbeddings(
+        model_name="sentence-transformers/all-MiniLM-L6-v2"
+    )
 
     db = Chroma.from_documents(
         chunks,
         embeddings,
         persist_directory="db"
     )
-
-    db.persist()
 
     print("✅ Ingestion complete!")
 

@@ -8,18 +8,24 @@ from src.nodes.refiner import refine_answer
 from langchain_community.vectorstores import Chroma
 from langchain_community.embeddings import HuggingFaceEmbeddings
 
-# Setup retriever
+
+# ✅ SAME embedding as ingestion
 embeddings = HuggingFaceEmbeddings(
     model_name="sentence-transformers/all-MiniLM-L6-v2"
 )
 
+# ✅ FIX: Explicit collection name (IMPORTANT)
 db = Chroma(
     persist_directory="db",
-    embedding_function=embeddings
+    embedding_function=embeddings,
+    collection_name="langchain"  # 🔥 ensures correct loading
 )
 
-# 🔥 Slightly improved retrieval
-retriever = db.as_retriever(search_kwargs={"k": 6})
+# ✅ IMPROVED retrieval
+retriever = db.as_retriever(
+    search_type="similarity",
+    search_kwargs={"k": 5}
+)
 
 
 # 🔹 Nodes
@@ -29,17 +35,17 @@ def retrieve_node(state: RAGState):
 
     docs = retriever.invoke(state.query)
 
-    # ✅ FIX: KEEP FULL DOCUMENT (WITH METADATA)
+    # ✅ FIX: Less aggressive filtering
     clean_docs = [
-        doc
-        for doc in docs
-        if len(doc.page_content.strip()) > 50
+        doc for doc in docs
+        if doc.page_content.strip()
     ]
+
+    print(f"✅ Retrieved {len(clean_docs)} docs")
 
     return {"documents": clean_docs}
 
 
-# ✅ 🔥 FIX HERE (ONLY CHANGE)
 def generate_node(state: RAGState):
     answer = generate_answer(state.query, state.documents)
 
@@ -47,7 +53,7 @@ def generate_node(state: RAGState):
     if "__MCQ__" in answer:
         return {
             "answer": answer,
-            "iteration": state.max_iterations  # force stop
+            "iteration": state.max_iterations
         }
 
     return {"answer": answer}
